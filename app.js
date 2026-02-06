@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json())
 
 //2
-app.get('/telepules',(req,res)=>{
+app.get('/nyiltnap/api/v1/telepules',(req,res)=>{
     const telepules=req.query.nev
     // if(!telepules){
     //     return res.status(400).json({message:"Hiányzik a település neve"})
@@ -18,7 +18,7 @@ app.get('/telepules',(req,res)=>{
     res.status(200).json(diakok)
 })
 //3
-app.get('/tanora',(req,res)=>{
+app.get('/nyiltnap/api/v1/tanora',(req,res)=>{
     const tanora=req.query.targy
     // if(!tanora){
     //     return res.status(400).json({message: "Hiányzik a tanora neve"})
@@ -27,24 +27,24 @@ app.get('/tanora',(req,res)=>{
     res.status(200).json(lista)
 })
 //4
-app.get('/9-matematika-fizika',(req,res)=>{
+app.get('/nyiltnap/api/v1/9-matematika-fizika',(req,res)=>{
     const orak=db.prepare("SELECT csoport, targy, datum FROM orak WHERE csoport LIKE '9%' and (targy='matematika' or targy='fizika') ORDER BY targy ASC").all()
     res.status(200).json(orak)
 })
 //5
-app.get('/telepulesfo',(req,res)=>{
+app.get('/nyiltnap/api/v1/telepulesfo',(req,res)=>{
     const telepfo=db.prepare("SELECT telepules, COUNT(nev) FROM diakok GROUP BY telepules ORDER BY COUNT(nev) DESC").all()
 
     res.status(200).json(telepfo)
 })
 //6
-app.get('/tantargyak',(req,res)=>{
+app.get('/nyiltnap/api/v1/tantargyak',(req,res)=>{
     const orak=db.prepare("SELECT DISTINCT(targy) FROM orak ORDER BY targy ASC").all()
     res.status(200).json(orak)
 })
 
 //7
-app.get('/tanar',(req,res)=>{
+app.get('/nyiltnap/api/v1/tanar',(req,res)=>{
     const { nev, datum } = req.query;
     // if (!nev || !datum) {
     //     return res.status(400).json({ message: "Hiányzik a tanár neve vagy a dátum" });
@@ -55,7 +55,7 @@ app.get('/tanar',(req,res)=>{
 
 })
 //8
-app.get('/telepulesrol',(req,res)=>{
+app.get('/nyiltnap/api/v1/telepulesrol',(req,res)=>{
     const nev=req.query.nev
     const telepules=db.prepare("SELECT telepules FROM diakok WHERE nev=?").get(nev)
     const diakok=db.prepare("SELECT nev FROM diakok WHERE telepules=? and nev!=?").all(telepules.telepules,nev)
@@ -63,7 +63,7 @@ app.get('/telepulesrol',(req,res)=>{
 })
 
 //9
-app.get('/szabad',(req,res)=>{
+app.get('/nyiltnap/api/v1/szabad',(req,res)=>{
     const szabad=db.prepare(`
         SELECT ora.datum,ora.orasorszam,ora.targy,ora.tanar, ora.ferohely-COUNT(kapcs.id) AS szabad 
         FROM orak ora 
